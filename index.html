@@ -1,0 +1,63 @@
+<html><head><meta http-equiv="X-UA-Compatible" content="IE=edge"; charset=UTF-8">
+
+<style type="text/css">
+* { margin: 0; padding: 0; }
+canvas { display: block; }
+body { background: black; font-size:1em; }
+.zero { display: none; }
+</style>
+</head>
+<body>
+<canvas id="rain"></canvas>
+<script type="text/javascript">
+		let c = document.getElementById("rain");
+		c.height = window.innerHeight;
+		c.width = window.innerWidth;
+
+		let dropSpeed = 1;
+		let drop_size = 16;
+		let columns = (c.height/drop_size) + 1;
+
+		let letter = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
+		letter = letter.split("");
+
+		let drops = [];
+		for(let i = 0; i < columns; i++)
+			drops[i] = 0;
+
+		ctx = c.getContext('2d');
+
+		let hue = 0;
+		let saturation = 0;
+		let lightness = 0;
+
+		function draw()
+		{
+			ctx.fillStyle = "rgba(0, 0, 0, "+ String(1/32) +")";
+			ctx.fillRect(0, 0, c.width, c.height);
+
+			ctx.fillStyle = "hsla(" + String(hue) + ", " + String(saturation) + "%, " + String(saturation) + "%, 1)";
+			ctx.font= drop_size + "px arial";
+			for(let i = 0; i < drops.length; i++)
+			{
+				text = letter[Math.floor(Math.random()*letter.length)];
+				ctx.fillText(text, drops[i]*drop_size, i*drop_size);
+
+				drops[i] += dropSpeed;
+
+				if(drops[i]*drop_size > c.width && Math.random() > 63/64){
+					drops[i] = 0;
+				}
+			}
+
+			// いいマジックナンバーさん
+			hue+=1/4;
+			saturation = saturation > 100 ? 0 : saturation + 1/9;
+			saturation = saturation > 100 ? 0 : saturation + 1/25;
+		}
+
+		setInterval(draw, 50/3);
+
+</script>
+
+</body></html>
